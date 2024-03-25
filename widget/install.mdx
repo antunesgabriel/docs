@@ -4,7 +4,7 @@ description: "Now that you already have an account and a project on Logaflow, it
 icon: "code"
 ---
 
-## Basic installation
+## HTML installation
 
 General installation, the Logaflow widget is a web component that you can install in your project/product using HTML + javascript code. You can add this code to any page where you want to use the widget, see example below:
 
@@ -46,48 +46,47 @@ General installation, the Logaflow widget is a web component that you can instal
   prefer.
 </Tip>
 
-## React + Vite installation
+## React installation + 
 
-See an example of how to install the logaflow widget in a React + Vite project using envrioment variable.
+<Steps>
+  <Step title="Install Logaflow package">
+    ```shell
+    npm i @logaflow/react
+    ```
 
-```html
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example</title>
-    <script
-      type="module"
-      crossorigin="true"
-      async
-      src="https://widget.logaflow.com/addons/logaflow-widget.es.js?version=%VITE_LOGAFLOW_WIDGET_VERSION%"
-    ></script>
-  </head>
+    or using yarn
 
-  <body>
-    <logaflow-widget
-      project-key="%VITE_LOGAFLOW_PROJECT_TOKEN%"
-      trigger-text="Feedback"
-    ></logaflow-widget>
+    ```shell
+    yarn add  @logaflow/react
+    ```
+  </Step>
+  <Step title="Import Logaflow's widget in your application">
+    ```tsx
+    import React from 'react'
+    import ReactDOM from 'react-dom/client'
 
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-```
+    import { LogaflowWidget } from '@logaflow/react'
+    import '@/styles/globals.css'
 
-```env
-# .env
-VITE_LOGAFLOW_PROJECT_TOKEN="Your Token Here"
-VITE_LOGAFLOW_WIDGET_VERSION="Widget Version Here"
-```
+    import AppRoot from './app.root.tsx'
 
-<Info>
-  Here we use the module
-  https://widget.logaflow.com/addons/logaflow-widget.es.js (es module) which is
-  what we recommend for react applications, for others we recommend the umd
-  module (https://widget.logaflow.com/addons/logaflow-widget.umd.js)
-</Info>
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <React.StrictMode>
+        <>
+          {/* Add the logaflow widget to your react project */}
+          <LogaflowWidget projectKey={YOUR_PROJECT_TOKEN} />
+          <AppRoot />
+        </>
+      </React.StrictMode>
+    )
+    ```
+
+    <Info>
+    You can change the import location if you prefer
+    </Info>
+  </Step>
+  <Step title="All ready!">
+    The logaflow feedback widget will now appear in your project
+  </Step>
+</Steps>
+
