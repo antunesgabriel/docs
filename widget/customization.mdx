@@ -35,7 +35,8 @@ You can customize the trigger that opens the feedback popup. To use a customizab
     import React from 'react'
     import ReactDOM from 'react-dom/client'
 
-    import { LogaflowWidget } from '@logaflow/react'
+    import { LogaflowWidget } from '@logaflow/react' // or import { LogaflowWidget } from '@logaflow/next' if you are using in a next project
+
     import '@/styles/globals.css'
 
     import AppRoot from './app.root.tsx'
@@ -53,15 +54,18 @@ You can customize the trigger that opens the feedback popup. To use a customizab
   </Step>
   <Step title="Use widget hook in your custom trigger">
     ```tsx
-    import { useWidget } from '@logaflow/react'
+    import { useLogaflowPopup } from "@logaflow/react" // or import { useLogaflowPopup } from '@logaflow/next'
 
     export const CustomTriggerComponent = () => {
-        const { open, isOpen } = useWidget()
+        const { open, isOpen } = useLogaflowPopup()
         return <button onClick={open}>{isOpen ? 'Opened' : 'Can I help you?'}</button>
     }
     ```
   </Step>
   <Step title="Using your custom trigger">
+    <Info>
+      **Example** importing and using custom trigger
+    </Info>
     ```tsx
     import { Outlet } from 'react-router-dom'
 
@@ -81,6 +85,36 @@ You can customize the trigger that opens the feedback popup. To use a customizab
   </Step>
 </Steps>
 
+## Identify user
 
+You can add an identifier to know which user is providing feedback. This identifier will appear in the feedback details on the logaflow dashboard.
+
+### How to identify user
+
+Use useLogaflowIdentify hook
+
+```tsx
+import { useLogaflowIdentify } from '@logaflow/react' // or if using next: import { useLogaflowIdentify } from '@logaflow/next'
+
+function ExampleAuthPage() {
+  const { identifyUser } = useLogaflowIdentify()
+
+  const onSubmit = () => {
+    // ...
+
+    // ... example adding user identify ...
+    identifyUser(user.email)
+  }
+  return (
+    <form>
+      <input placeholder="email" type="email" />
+      <input placeholder="password" type="password" />
+      <button>login</button>
+    </form>
+  )
+}
+
+export default ExampleAuthPage
+```
 
 
