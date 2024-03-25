@@ -23,3 +23,64 @@ In this section you can enable and disable the function of recording the [user s
 In this section you can configure the requests that can be captured by logaflow. By default all requests made are captured, you can limit this by adding the specific sources you want to monitor.
 
 <Note>Logaflow does not capture sensitive information from requests.</Note>
+
+## Widget customization
+
+### Customize widget trigger
+You can customize the trigger that opens the feedback popup. To use a customizable trigger you must first disable logaflow's default trigger:
+
+<Steps>
+  <Step title="Pass useCustomTrigger prop">
+    ```tsx
+    import React from 'react'
+    import ReactDOM from 'react-dom/client'
+
+    import { LogaflowWidget } from '@logaflow/react'
+    import '@/styles/globals.css'
+
+    import AppRoot from './app.root.tsx'
+
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <>
+        {/* Add useCustomTrigger prop */}
+        <LogaflowWidget projectKey={YOUR_PROJECT_TOKEN} useCustomTrigger />
+        <AppRoot />
+        </>
+    </React.StrictMode>
+    )
+    ```
+  </Step>
+  <Step title="Use widget hook in your custom trigger">
+    ```tsx
+    import { useWidget } from '@logaflow/react'
+
+    export const CustomTriggerComponent = () => {
+        const { open, isOpen } = useWidget()
+        return <button onClick={open}>{isOpen ? 'Opened' : 'Can I help you?'}</button>
+    }
+    ```
+  </Step>
+  <Step title="Using your custom trigger">
+    ```tsx
+    import { Outlet } from 'react-router-dom'
+
+    import { CustomTriggerComponent } from '@/components/common/custom-trigger.component'
+
+    function PrivateLayout() {
+        return (
+            <>
+                <CustomTriggerComponent />
+                <Outlet />
+            </>
+        )
+    }
+
+    export default PrivateLayout
+    ```
+  </Step>
+</Steps>
+
+
+
+
