@@ -89,7 +89,14 @@ You can customize the trigger that opens the feedback popup. To use a customizab
 
 You can add an identifier to know which user is providing feedback. This identifier will appear in the feedback details on the logaflow dashboard.
 
-### How to identify user
+
+User ID will appear on the details screen:
+<img
+  src="/images/identify.png"
+  alt="Logaflow identify"
+/>
+
+### How identify user using react
 
 Use useLogaflowIdentify hook
 
@@ -118,3 +125,36 @@ export default ExampleAuthPage
 ```
 
 
+### How identify user using html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    ...
+    <!-- Logaflow widget script -->
+    <script
+      type="module"
+      crossorigin="true"
+      async
+      src="https://widget.logaflow.com/addons/logaflow-widget.umd.js?version=1.0.0"
+    ></script>
+  </head>
+
+  <body>
+    <!-- Logaflow widget web component -->
+    <logaflow-widget
+      project-key="YOUR_LOGAFLOW_PROJECT_TOKEN_HERE"
+      trigger-text="Feedback"
+    ></logaflow-widget>
+
+    ...
+
+    <!-- Identifying the user -->
+    <script>
+      // When importing the Logaflow script, you will have the logaflowIdentify function globally
+       window.logaflowIdentify("user@email.com"); // this params only receive string
+    </script>
+  </body>
+</html>
+```

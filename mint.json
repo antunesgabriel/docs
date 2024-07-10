@@ -37,8 +37,8 @@
       "pages": ["widget/install", "widget/customization"]
     },
     {
-      "group": "Feedback",
-      "pages": ["feedback/introduction"]
+      "group": "Integrations",
+      "pages": ["integrations/slack", "integrations/discord", "integrations/webhook"]
     }
   ],
   "footerSocials": {

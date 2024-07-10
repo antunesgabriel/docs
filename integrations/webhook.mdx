@@ -1,0 +1,31 @@
+---
+title: 'Webhook'
+description: 'Integrate Logaflow into any workflow using our webhooks events for new feedback.'
+---
+
+## 1. Connect your webhook to Logaflow
+1. Access the [integrations](https://app.logaflow.com/workspace/integrations) tab of the project you want to integrate asn select webhook option.
+2. Add a webhook name.
+3. Paste your webhook URL.
+4. Se precisar adicionar algum cabeçalho para chamar seu webhook, espanda a opção 'HTTP Header (Optional)' e adicione sua chave e valor que deve ir no cabeçalho da chamada ao seu webhook.
+5. Click test and save.
+
+<img
+  src="/images/webhook_1.png"
+  alt="Logaflow Webhook Integration"
+/>
+
+## 2. Webhook body
+The webhook will perform a POST test call to the webhook url provided with the following body:
+```JSON
+{
+    "type": "other",
+    "url": "https://app.logaflow.com/redirect...",
+    "comment": "This is a test"
+}
+```
+> **type**: Is the type of feedback, the value of this field can be: bug, idea and other.
+
+> **comment**: Is the comment written in the feedback.
+
+> **url**: Is the url to open the feedback on the logaflow dashboard.
