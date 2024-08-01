@@ -1,0 +1,352 @@
+---
+title: SSO Auth
+description: ""
+icon: "lock"
+---
+
+## Introduction
+
+With Logaflow's <strong>SSO Auth Token</strong>, you can authenticate your users logged into your application to identify them on the Logaflow dashboard.
+
+<Note> This step is <strong>optional</strong>, but we recommend implementing it to better manage each user's feedback. Since they are already authenticated, users with <strong>SSO Token will not see the Name and Email fields when opening the Logaflow widget</strong>.</Note>
+
+## Requirements
+
+- Access to your [project's secret](https://app.logaflow.com/workspace/settings) in Logaflow.
+<Frame caption="Location of your project secret">
+  <img src="/images/sso-locale.png" />
+</Frame>
+
+- [Generate and pass](#how-to-implement-sso-auth) jwt token to Logaflow widget
+
+
+## How to implement SSO auth
+
+<Steps>
+  <Step title="Generate a JWT Token with your project's secret">
+    On your server, you will need to generate a JWT token signed with your [Logaflow project's secret](https://app.logaflow.com/workspace/settings). Below is an example of how to generate this token:
+
+    <CodeGroup>
+
+    ```typescript example.ts
+    import jwt from 'jsonwebtoken';
+
+    const LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET";
+
+    interface User {
+        id?: string;
+        name: string;
+        email: string;
+        avatar?: string;
+    }
+
+    function generateLogaflowUserSSOToken(u: User): string {
+        const payload = {
+            id: u.id || '',           // optional
+            name: u.name,             // required
+            email: u.email,           // required
+            avatar: u.avatar || ''    // optional
+        };
+
+        return jwt.sign(payload, LOGAFLOW_PROJECT_SECRET, { algorithm: 'HS256' });
+    }
+
+    ```
+
+    ```go example.go
+    package example
+
+    import (
+        "fmt"
+
+        "github.com/golang-jwt/jwt/v5"
+    )
+
+    var LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET"
+
+    type User struct {
+        Name string
+        Email string
+        Avatar string
+        ID string
+    }
+
+    func GenerateLogaflowUserSSOToken(u User) (string, error) {
+        token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+            "id":     u.ID,          // optional
+            "name":   u.Name,        // required
+            "email":  u.Email,       // required
+            "avatar": u.Avatar, // optional
+        })
+
+        t, err := token.SignedString([]byte(LOGAFLOW_PROJECT_SECRET))
+
+        return t, err
+    }
+    ```
+
+    ```php example.php
+    require 'vendor/autoload.php';
+    use Firebase\JWT\JWT;
+
+    $LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET";
+
+    class User {
+        public $name;
+        public $email;
+        public $avatar;
+        public $id;
+
+        public function __construct($name, $email, $avatar = null, $id = null) {
+            $this->name = $name;
+            $this->email = $email;
+            $this->avatar = $avatar;
+            $this->id = $id;
+        }
+    }
+
+    function generateLogaflowUserSSOToken($user) {
+        global $LOGAFLOW_PROJECT_SECRET;
+
+        $payload = array(
+            "id" => $user->id,           // optional
+            "name" => $user->name,       // required
+            "email" => $user->email,     // required
+            "avatar" => $user->avatar    // optional
+        );
+
+        return JWT::encode($payload, $LOGAFLOW_PROJECT_SECRET, 'HS256');
+    }
+    ```
+
+    ```java Example.java
+    import io.jsonwebtoken.Jwts;
+    import io.jsonwebtoken.SignatureAlgorithm;
+
+    class User {
+        String id;
+        String name;
+        String email;
+        String avatar;
+
+        User(String name, String email, String avatar, String id) {
+            this.name = name;
+            this.email = email;
+            this.avatar = avatar;
+            this.id = id;
+        }
+    }
+
+    public class GenerateToken {
+        private static final String LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET";
+
+        public static String generateLogaflowUserSSOToken(User user) {
+            return Jwts.builder()
+                    .claim("id", user.id)           // optional
+                    .claim("name", user.name)       // required
+                    .claim("email", user.email)     // required
+                    .claim("avatar", user.avatar)   // optional
+                    .signWith(SignatureAlgorithm.HS256, LOGAFLOW_PROJECT_SECRET.getBytes())
+                    .compact();
+        }
+    }
+
+    ```
+
+    ```python example.py
+    import jwt
+
+    LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET"
+
+    class User:
+        def __init__(self, name, email, avatar=None, user_id=None):
+            self.name = name
+            self.email = email
+            self.avatar = avatar
+            self.id = user_id
+
+    def generate_logaflow_user_sso_token(user):
+        payload = {
+            "id": user.id,           # optional
+            "name": user.name,       # required
+            "email": user.email,     # required
+            "avatar": user.avatar    # optional
+        }
+
+        token = jwt.encode(payload, LOGAFLOW_PROJECT_SECRET, algorithm="HS256")
+        return token
+
+    ```
+
+    ```csharp Example.cs
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Text;
+
+    class User
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Avatar { get; set; }
+        public string Id { get; set; }
+
+        public User(string name, string email, string avatar = null, string id = null)
+        {
+            Name = name;
+            Email = email;
+            Avatar = avatar;
+            Id = id;
+        }
+    }
+
+    class Program
+    {
+        private const string LOGAFLOW_PROJECT_SECRET = "YOUR_LOGAFLOW_PROJECT_SSO_SECRET";
+
+        static string GenerateLogaflowUserSSOToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim("id", user.Id ?? ""),          // optional
+                new Claim("name", user.Name),            // required
+                new Claim("email", user.Email),          // required
+                new Claim("avatar", user.Avatar ?? "")   // optional
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LOGAFLOW_PROJECT_SECRET));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Authenticate your user in the Widget">
+    To authenticate your user in the widget, you need to pass the generated token to the Logaflow widget:
+
+    <CodeGroup>
+
+    ```html HTML
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        ...
+        <!-- Logaflow widget script -->
+        <script
+            type="module"
+            crossorigin="true"
+            async
+            src="https://widget.logaflow.com/addons/logaflow-widget.umd.js?version=1.0.3"
+        ></script>
+    </head>
+
+    <body>
+        <!-- Add Logaflow widget web component to the top of your -->
+        <logaflow-widget
+            project-key="YOUR_LOGAFLOW_PROJECT_TOKEN_HERE"
+            trigger-text="Example"
+            sso-token="USER_SSO_TOKEN" <!-- Pass user SSO Token here -->
+        ></logaflow-widget>
+
+        ...
+    </body>
+    </html>
+    ```
+
+
+    ```tsx React
+    import React from 'react'
+    import ReactDOM from 'react-dom/client'
+
+    import { LogaflowWidget, useLogaflowSSOAuth  } from '@logaflow/react'
+    import '@/styles/globals.css'
+
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+        <React.StrictMode>
+            <>
+            {/* Add the logaflow widget to the top of your react project */}
+            <LogaflowWidget projectKey={YOUR_PROJECT_TOKEN} />
+            <YourApp />
+            </>
+        </React.StrictMode>
+    )
+
+    function YourApp() {
+        const { setSSOAuth } = useLogaflowSSOAuth()
+
+        useEffect(() => {
+            // ... your rule to get user sso token
+
+            setSSOAuth(token)
+        }, [setSSOAuth])
+
+        ...
+    }
+    ```
+
+    ```tsx Next
+    // components/logaflow-sso-auth.tsx
+    "use client"
+
+    import { useLogaflowSSOAuth  } from '@logaflow/next'
+
+    export function LogaflowSSOAuth() {
+        const { setSSOAuth  } = useLogaflowSSOAuth()
+    
+        useEffect(() => {
+            // ... your rule to get user sso token
+
+            setSSOAuth(token)
+        }, [])
+    }
+
+    // import and add the LogaflowSSOAuth component in any location after the LogaflowWidget setup component
+
+    ```
+
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="All set!">
+    After these steps, your user will be authenticated and you will be able to identify them in the feedback sent by them on the feedback details page:
+
+    <Frame caption="User identification with SSO">
+        <img src="/images/user-in-details.png" />
+    </Frame>
+  </Step>
+</Steps>
+
+<br />
+
+
+## Token payload
+
+The JWT token generated in your application must contain the following information:
+
+<ParamField body="id" type="string">
+    This field is optional, however, and will only be used to send to your registered webhooks
+</ParamField>
+
+<ParamField body="name" type="string" required>
+    This field is mandatory and will be used to identify your user within Logaflow and for your registered webhooks
+</ParamField>
+
+<ParamField body="email" type="string" required>
+    This field is mandatory and will be used to identify your user within Logaflow and for your registered webhooks
+</ParamField>
+
+<ParamField body="avatar" type="string">
+This field is optional and will only be used to improve the experience in Logaflow and will also be sent to your registered webhooks
+</ParamField>

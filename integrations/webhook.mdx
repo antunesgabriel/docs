@@ -10,22 +10,60 @@ description: 'Integrate Logaflow into any workflow using our webhooks events for
 4. Se precisar adicionar algum cabeçalho para chamar seu webhook, espanda a opção 'HTTP Header (Optional)' e adicione sua chave e valor que deve ir no cabeçalho da chamada ao seu webhook.
 5. Click test and save.
 
+<Frame>
 <img
   src="/images/webhook_1.png"
   alt="Logaflow Webhook Integration"
 />
+</Frame>
 
 ## 2. Webhook body
 The webhook will perform a POST test call to the webhook url provided with the following body:
+
 ```JSON
 {
-    "type": "other",
-    "url": "https://app.logaflow.com/redirect...",
-    "comment": "This is a test"
+  "comment": "user comment",
+  "type": "other",
+  "url": "https://app.logaflow.com/...",
+  "user": {
+    "avatar": "https://avatars.githubusercontent.com/u/45521465?v=4",
+    "email": "jhon.doe@gmail.com",
+    "id": "123",
+    "name": "Jhon Doe"
+  }
 }
 ```
-> **type**: Is the type of feedback, the value of this field can be: bug, idea and other.
 
-> **comment**: Is the comment written in the feedback.
+#### Params
 
-> **url**: Is the url to open the feedback on the logaflow dashboard.
+<ResponseField name="comment" type="string">
+  Is the comment written in the feedback.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Is the type of feedback, the value of this field can be: bug, idea and other.
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  Is the url to open the feedback on the logaflow dashboard.
+</ResponseField>
+
+<ResponseField name="user" type="object" default="null">
+  This field will not be null if the feedback creator is authenticated via SSO Auth or has entered the name and email for contact in the Logaflow widget.
+</ResponseField>
+
+<ResponseField name="user.id" type="string" default="undefined">
+  This field will only be filled in if the user is authenticated via SSO and the JWT token used to authenticate the user contains this information.
+</ResponseField>
+
+<ResponseField name="user.name" type="string" default="undefined">
+  This field will only be filled in if the user is authenticated via SSO or has filled in the Name field in the widget.
+</ResponseField>
+
+<ResponseField name="user.email" type="string" default="undefined">
+  This field will only be filled in if the user is authenticated via SSO or has filled in the Email field in the widget.
+</ResponseField>
+
+<ResponseField name="user.avatar" type="string" default="undefined">
+  This field will only be filled in if the user is authenticated via SSO and the JWT token used to authenticate the user contains this information.
+</ResponseField>

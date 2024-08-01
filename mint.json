@@ -34,7 +34,7 @@
     },
     {
       "group": "Widget",
-      "pages": ["widget/install", "widget/customization"]
+      "pages": ["widget/install", "widget/customization", "widget/sso-auth"]
     },
     {
       "group": "Integrations",

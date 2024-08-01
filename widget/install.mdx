@@ -23,7 +23,7 @@ General installation, the Logaflow widget is a web component that you can instal
   </head>
 
   <body>
-    <!-- Logaflow widget web component -->
+    <!-- Add Logaflow widget web component to the top of your -->
     <logaflow-widget
       project-key="YOUR_LOGAFLOW_PROJECT_TOKEN_HERE"
       trigger-text="Feedback"
@@ -73,7 +73,7 @@ General installation, the Logaflow widget is a web component that you can instal
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <React.StrictMode>
         <>
-          {/* Add the logaflow widget to your react project */}
+          {/* Add the logaflow widget to the top of your react project */}
           <LogaflowWidget projectKey={YOUR_PROJECT_TOKEN} />
           <AppRoot />
         </>
@@ -128,7 +128,7 @@ General installation, the Logaflow widget is a web component that you can instal
       return (
         <html lang="en">
           <body className={inter.className}>
-            {/* adding logaflow in the scope of where you want it to appear  */}
+            {/* adding logaflow in the scope of where you want it to appear on the top of your project */}
             <LogaflowWidget projectKey="PROJECT_TOKEN" />
             {children}
           </body>
